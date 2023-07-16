@@ -1,5 +1,5 @@
 {
-    Basic main for the example
+    Basic main program for the example
 }
 program main;
 
@@ -8,5 +8,5 @@ uses testUtils;
 
 begin
     // we got the function pointer of the imported testUtils unit
-    helloWolrd();
+    helloWorld();
 end.

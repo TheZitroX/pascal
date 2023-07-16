@@ -10,7 +10,7 @@ interface
     // (in and out parameters need to be specified here too)
     // place the function documentation here
     {
-        A Simple functions with void return to print out a Hello Wolrd.helloWorld
+        A Simple functions with void return to print out a Hello world!.
 
         @details the stream goes to stdout with the writeln function.
 
