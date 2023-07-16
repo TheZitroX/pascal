@@ -2,27 +2,24 @@ unit testUtils;
 
 interface
 
+    uses TypeDefine;
+
     procedure testFunc();
     procedure calcFractionForNTimes(a:integer);
     function calcFractions(a:integer):integer;
 
     // programmieren 2 sose 2020
+    {
+        "Was wird hierberechnet?"
+    }
     function aufgabe1Rekru(n:integer):integer;
     function aufgabe1EndRekru(n:integer):integer;
     function aufgabe1Iteration(n:integer):integer;
+    // sose 2021
+    // aufgabe 4
+    function SwitchElements(p_personNode:tp_personNode):boolean;
 
 implementation
-    type TPerson = record
-        name:string;
-        age:byte;
-    end;
-
-    type TP_PersonNode = ^TList;
-    type TPersonNode = record
-        person:TPerson;
-        next:TP_PersonNode;
-    end;
-
     procedure testFunc();
     var test:integer;
     begin
@@ -56,8 +53,10 @@ implementation
             aufgabe1Rekru := aufgabe1Rekru(n - 1) * n;
     end;
 
+    // todo implement
     function aufgabe1EndRekru(n:integer):integer;
     begin
+        aufgabe1EndRekru := 0;
     end;
 
     function aufgabe1Iteration(n:integer):integer;
@@ -71,21 +70,28 @@ implementation
     end;
 
     // todo test
-    procedure SwitchElements(p_personNode:TP_PersonNode);
-    var p_prevPersonNode:TP_PersonNode;
-    var tempPerson:TPerson;
+    // fix move to sose 2021 folder
+    // sose 2021 aufgabe 4
+    function SwitchElements(p_personNode:tp_personNode):boolean;
+    var p_prevPersonNode:tp_personNode;
+    var tempPerson:t_person;
+    var bSwitched:boolean = false;
     begin
-        if (p_personNode.next = not nil) then
+        if (p_personNode^.next <> nil) then
         begin
-            p_personNode := p_personNode.next;
+            p_personNode := p_personNode^.next;
             p_prevPersonNode := p_personnode;
-            p_personNode := p_personNode.next;
-            if (p_personNode = not nil) then
+            p_personNode := p_personNode^.next;
+            if (p_personNode <> nil) then
             begin
-                tempPerson := p_prevPersonNode.person;
-                p_prevPersonNode.person := p_personNode.person;
-                p_personNode.person := tempPerson;
+                tempPerson := p_prevPersonNode^.person;
+                p_prevPersonNode^.person := p_personNode^.person;
+                p_personNode^.person := tempPerson;
+
+                bSwitched := true;
             end;
         end;
+
+        SwitchElements := bSwitched;
     end;
 end.
