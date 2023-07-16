@@ -1,35 +1,39 @@
+{
+    A unit example with a hello world function
+}
 unit testUtils;
 
+// ever function specified here is visible outside (public)
 interface
 
-    procedure testFunc();
-    procedure calcFractionForNTimes(a:integer);
-    function calcFractions(a:integer):integer;
+    // just the head of the function is needed
+    // (in and out parameters need to be specified here too)
+    // place the function documentation here
+    {
+        A Simple functions with void return to print out a Hello Wolrd.helloWorld
+
+        @details the stream goes to stdout with the writeln function.
+
+        @uses helperFunction()
+    }
+    procedure helloWorld();
 
 implementation
 
-    procedure testFunc();
-    var test:integer;
+    // a private function should have docs when its getting complicated
+    // since it isnt specified in the interface, you habe to place the doc here
+    {
+        A basic helper function to writeln
+    }
+    procedure helperFunction();
     begin
-        test := 1;
-        writeln(test);
+        writeln(' world!');
     end;
 
-    procedure calcFractionForNTimes(a:integer);
-    var i:integer;
+    // dont duplicate the documentation, just leave it blank here
+    procedure helloWorld();
     begin
-        for i := 1 to a do
-            writeln(i, ' - ', calcFractions(i));
-    end;
-
-    function calcFractions(a:integer):integer;
-    var i, fraction:integer;
-    begin
-        fraction := 0;
-        for i := 1 to a do
-            if a mod i = 0 then
-                fraction := fraction + 1;
-
-        calcFractions := fraction;
+        writeln('Hello');
+        helperFunction();
     end;
 end.

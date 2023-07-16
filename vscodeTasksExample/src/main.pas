@@ -1,7 +1,12 @@
+{
+    Basic main for the example
+}
 program main;
 
+// implementing the testUtils unit
 uses testUtils;
 
 begin
-    calcFractionForNTimes(1000);
+    // we got the function pointer of the imported testUtils unit
+    helloWolrd();
 end.
