@@ -51,11 +51,11 @@ implementation
 
     function openFile(var txtInFile:text; inFileName:string):boolean;
     begin
-        assign(txtInFile, inFileName);
-        {$I-}
+        assign(txtInFile, 'input.txt');
+        {$I-} // turn off the io error handling
         reset(txtInFile);
-        {$I+}
-        openFile := (IOResult = 0);
+        {$I+} // turn on the io error handling
+        openFile := (ioresult = 0);
     end;
 
     procedure readFileToLines(var txtInFile:text; var inFileLines:TStringArray; var iInFileLineCount:integer);
