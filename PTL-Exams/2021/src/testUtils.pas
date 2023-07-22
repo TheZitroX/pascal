@@ -42,6 +42,21 @@ interface
         iOutFileLineCount:integer
     ):boolean;
 
+    // aufgabe 4
+
+    type
+        t_person = record
+            name:string;
+            age:integer;
+        end;
+        p_listnode = ^listnode;
+        listnode = record
+            person:t_person;
+            next:p_listnode;
+        end;
+
+    procedure SwitchElements(elem:p_listnode);
+
 implementation
 
     function testCount(n:word):word;
@@ -163,6 +178,25 @@ implementation
         begin
             writeln('Error: Could not open file ', sFilePath);
             saveStringToFile := false;
+        end;
+    end;
+
+
+    procedure SwitchElements(elem:p_listnode);
+    var
+        priviosNode:p_listnode;
+        tempPerson:t_person;
+    begin
+        // when the the next two elements ain't nil
+        // then switch the elements
+        if (elem <> nil) and (elem^.next <> nil) and (elem^.next^.next <> nil) then
+        begin
+            // save the privios node
+            priviosNode := elem^.next;
+            elem := priviosNode^.next;
+            tempPerson := priviosNode^.person;
+            priviosNode^.person := elem^.person;
+            elem^.person := tempPerson;
         end;
     end;
 end.
