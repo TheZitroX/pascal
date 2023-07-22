@@ -13,10 +13,34 @@ interface
     function testCountIterative(n:word):word;
     function testCountEndRecrusive(n:word):word;
 
-    function openFile(var txtInFile:text; inFileName:string):boolean;
-    procedure readFileToLines(var txtInFile:text; var inFileLines:TStringArray; var iInFileLineCount:integer);
-
     // augabe 3
+    function openFile(var txtInFile:text; inFileName:string):boolean;
+    function openWriteFile(var txtOutFile:text; outFileName:string):boolean;
+
+    procedure readFileToLines(
+        var txtInFile:text;
+        var inFileLines:TStringArray;
+        var iInFileLineCount:integer
+    );
+
+    function replaceAllOccurences(
+        var inFileLines:TStringArray;
+        var iInFileLineCount:integer;
+        var outFileLines:TStringArray;
+        var iOutFileLineCount:integer;
+        sSearchString:string;
+        sReplaceString:string
+    ):integer;
+
+    function getSearchStringFromUser():string;
+    function getReplaceStringFromUser():string;
+
+    function saveStringToFile(
+        var txtOutFile:text;
+        sFilePath:string;
+        outFileLines:TStringArray;
+        iOutFileLineCount:integer
+    ):boolean;
 
 implementation
 
@@ -51,22 +75,94 @@ implementation
 
     function openFile(var txtInFile:text; inFileName:string):boolean;
     begin
-        assign(txtInFile, 'input.txt');
+        assign(txtInFile, inFileName);
         {$I-} // turn off the io error handling
         reset(txtInFile);
         {$I+} // turn on the io error handling
         openFile := (ioresult = 0);
     end;
 
-    procedure readFileToLines(var txtInFile:text; var inFileLines:TStringArray; var iInFileLineCount:integer);
+    procedure readFileToLines(
+        var txtInFile:text;
+        var inFileLines:TStringArray;
+        var iInFileLineCount:integer
+    );
     var sLine:string;
     begin
         while not eof(txtInFile) do
         begin
             readln(txtInFile, sLine);
             inc(iInFileLineCount);
+            // fixme - this is not efficient. increase the size by a factor of 0.5 instead of small steps
             setLength(inFileLines, iInFileLineCount);
             inFileLines[iInFileLineCount-1] := sLine;
+        end;
+    end;
+
+    function replaceAllOccurences(
+        var inFileLines:TStringArray;
+        var iInFileLineCount:integer;
+        var outFileLines:TStringArray;
+        var iOutFileLineCount:integer;
+        sSearchString:string;
+        sReplaceString:string
+    ):integer;
+    var i:integer;
+    begin
+        // set length of outFileLines to the same length as inFileLines
+        setLength(outFileLines, iInFileLineCount);
+        iOutFileLineCount := iInFileLineCount;
+
+        // replace all occurences of sSearchString with sReplaceString
+        // and write the result to outFileLines
+        for i := 0 to iInFileLineCount-1 do
+            outFileLines[i] := StringReplace(inFileLines[i], sSearchString, sReplaceString, [rfReplaceAll, rfIgnoreCase]);
+
+        // return the number of lines
+        // todo - this is not correct. it should return the number of replacements
+        replaceAllOccurences := iInFileLineCount;
+    end;
+    
+    function getSearchStringFromUser():string;
+    begin
+        write('Enter the string to search for: ');
+        readln(getSearchStringFromUser);
+    end;
+
+    function getReplaceStringFromUser():string;
+    begin
+        write('Enter the string to replace with: ');
+        readln(getReplaceStringFromUser);
+    end;
+
+    function openWriteFile(var txtOutFile:text; outFileName:string):boolean;
+    begin
+        assign(txtOutFile, outFileName);
+        {$I-} // turn off the io error handling
+        rewrite(txtOutFile);
+        {$I+} // turn on the io error handling
+        openWriteFile := (ioresult = 0);
+    end;
+
+    function saveStringToFile(
+        var txtOutFile:text;
+        sFilePath:string;
+        outFileLines:TStringArray;
+        iOutFileLineCount:integer
+    ):boolean;
+    var i:integer;
+    begin
+        if (openWriteFile(txtOutFile, sFilePath)) then
+        begin
+            for i := 0 to iOutFileLineCount-1 do
+                writeln(txtOutFile, outFileLines[i]);
+            close(txtOutFile);
+            saveStringToFile := true;
+        end
+        else
+        begin
+            writeln('Error: Could not open file ', sFilePath);
+            saveStringToFile := false;
         end;
     end;
 end.
